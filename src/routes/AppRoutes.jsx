@@ -17,6 +17,8 @@ import Dashboard from '../modules/dashboard/Dashboard';
 // Products Pages
 import ProductList from '../modules/products/ProductList';
 import ProductForm from '../modules/products/ProductForm';
+import CategoryList from '../modules/products/CategoryList';
+import BrandList from '../modules/products/BrandList';
 
 // POS Pages
 import PosTerminal from '../modules/pos/PosTerminal';
@@ -92,6 +94,24 @@ export function AppRoutes() {
           element={
             <ProtectedRoute module="products">
               <ProductList />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/category" 
+          element={
+            <ProtectedRoute module="products">
+              <CategoryList />
+            </ProtectedRoute>
+          } 
+        />
+
+        <Route 
+          path="/brands" 
+          element={
+            <ProtectedRoute module="products">
+              <BrandList />
             </ProtectedRoute>
           } 
         />

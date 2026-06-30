@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { ArrowLeft, Save, Plus, Trash2, Tag, Percent, Layers, ShieldCheck } from 'lucide-react';
 import { addProduct, updateProduct } from '../../app/slices/productsSlice';
+import API from '../../services/api';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Card, { CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/Card';
@@ -38,6 +39,25 @@ export function ProductForm() {
   const [vPrice, setVPrice] = useState('');
 
   const [saving, setSaving] = useState(false);
+  const [dbCategories, setDbCategories] = useState([]);
+  const [dbBrands, setDbBrands] = useState([]);
+
+  useEffect(() => {
+    const loadSelections = async () => {
+      try {
+        const [catRes, brandRes] = await Promise.all([
+          API.get('/categories'),
+          API.get('/brands')
+        ]);
+        // Filter only Active categories & brands
+        setDbCategories(catRes.data.filter(c => c.status === 'Active'));
+        setDbBrands(brandRes.data.filter(b => b.status === 'Active'));
+      } catch (err) {
+        console.error('Failed to load categories/brands for product form', err);
+      }
+    };
+    loadSelections();
+  }, []);
 
   const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(productSchema),
@@ -194,8 +214,8 @@ export function ProductForm() {
                     className="w-full h-10 px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
                   >
                     <option value="">Select Category</option>
-                    {categories.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                    {dbCategories.map((c) => (
+                      <option key={c.id} value={c.name}>{c.name}</option>
                     ))}
                   </select>
                   {errors.category && <p className="text-xs text-destructive font-semibold">{errors.category.message}</p>}
@@ -208,8 +228,8 @@ export function ProductForm() {
                     className="w-full h-10 px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
                   >
                     <option value="">Select Brand</option>
-                    {brands.map((b) => (
-                      <option key={b} value={b}>{b}</option>
+                    {dbBrands.map((b) => (
+                      <option key={b.id} value={b.name}>{b.name}</option>
                     ))}
                   </select>
                   {errors.brand && <p className="text-xs text-destructive font-semibold">{errors.brand.message}</p>}

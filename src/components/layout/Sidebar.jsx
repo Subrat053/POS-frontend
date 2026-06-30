@@ -18,7 +18,9 @@ import {
   ChevronRight,
   LogOut,
   ShieldCheck,
-  FileSpreadsheet
+  FileSpreadsheet,
+  FolderOpen,
+  Award
 } from 'lucide-react';
 import { toggleSidebar } from '../../app/slices/settingsSlice';
 import { logout } from '../../app/slices/authSlice';
@@ -45,7 +47,9 @@ export function Sidebar() {
       title: 'Catalog & Inventory',
       items: [
         { name: 'Products', path: '/products', icon: Layers, roles: ['Super Admin', 'Store Manager', 'Inventory Manager'] },
-        { name: 'Inventory', path: '/inventory', icon: Warehouse, roles: ['Super Admin', 'Store Manager', 'Inventory Manager'] }
+        { name: 'Inventory', path: '/inventory', icon: Warehouse, roles: ['Super Admin', 'Store Manager', 'Inventory Manager'] },
+        { name: 'Category', path: '/category', icon: FolderOpen, roles: ['Super Admin', 'Store Manager'] },
+        { name: 'Brands', path: '/brands', icon: Award, roles: ['Super Admin', 'Store Manager'] }
       ]
     },
     {

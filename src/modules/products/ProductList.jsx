@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import API from '../../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   Search, 
@@ -41,6 +42,19 @@ export function ProductList() {
 
   // Tabs: 'catalog' | 'categories' | 'barcodes'
   const [activeTab, setActiveTab] = useState('catalog');
+  const [dbCategories, setDbCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await API.get('/categories');
+        setDbCategories(response.data);
+      } catch (err) {
+        console.error('Failed to load categories for list filter', err);
+      }
+    };
+    loadCategories();
+  }, []);
 
   // Search & Filters
   const [search, setSearch] = useState('');
@@ -293,8 +307,8 @@ export function ProductList() {
                   className="w-full h-9 px-3 bg-background border border-border rounded-lg text-xs text-foreground focus:outline-none focus:border-primary"
                 >
                   <option value="">All Categories</option>
-                  {categories.map((c) => (
-                    <option key={c} value={c}>{c}</option>
+                  {dbCategories.map((c) => (
+                    <option key={c.id} value={c.name}>{c.name}</option>
                   ))}
                 </select>
               </div>
